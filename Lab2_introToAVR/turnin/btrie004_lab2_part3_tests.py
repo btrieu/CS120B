@@ -15,18 +15,36 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 
-tests = [ {'description': 'PINA: 0x40, PINB: 0x40, PINC: 0x40 => PORTD: 0x31',
-    'steps': [ {'inputs': [('PINA',0x40)], [('PINB',0x40)], [('PINC',0x40)], 'iterations': 5 } ],
-    'expected': [('PORTD',0x31)],
+tests = [ {'description': 'PINA: 0x00 => PORTC: 0x04',
+    'steps': [ {'inputs': [('PINA',0x00)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x04)],
     },
-    {'description': 'PINA: 0x00, PINB: 0x23, PINC: 0x55 => PORTD: 0x1E',
-    'steps': [ {'inputs': [('PINA',0x00)], [('PINB',0x23)], [('PINC',0x55)], 'iterations': 5 } ],
-    'expected': [('PORTD',0x1E)],
+    {'description': 'PINA: 0x80 => PORTC: 0x04',
+    'steps': [ {'inputs': [('PINA',0x80)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x04)],
     },
-    {'description': 'PINA: 0x00, PINB: 0x38, PINC: 0x55 => PORTD: 0x22',
-    'steps': [ {'inputs': [('PINA',0x00)], [('PINB',0x38)], [('PINC',0x55)], 'iterations': 5 } ],
-    'expected': [('PORTD',0x22)],
+    {'description': 'PINA: 0x04 => PORTC: 0x03',
+    'steps': [ {'inputs': [('PINA',0x04)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x03)],
     },
+    {'description': 'PINA: 0x05 => PORTC: 0x02',
+    'steps': [ {'inputs': [('PINA',0x05)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x02)],
+    },
+    {'description': 'PINA: 0x0D => PORTC: 0x01',
+    'steps': [ {'inputs': [('PINA',0x0D)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x01)],
+    },
+    {'description': 'PINA: 0x0F => PORTC[3:0]: 0, PC7: 1',
+    'steps': [ {'inputs': [('PINA',0x0F)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x80)],
+    },
+    {'description': 'PINA: 0x4F => PORTC[3:0]: 0, PC7: 1',
+    'steps': [ {'inputs': [('PINA',0x4F)], 'iterations': 5 } ],
+    'expected': [('PORTC',0x80)],
+    },
+
+ 
     ]
 #watch = ['PORTB']
 
