@@ -19,17 +19,22 @@ int main(void) {
 	DDRD = 0xFF; PORTD = 0x00;
 	unsigned char tempD = 0x00;
 while(1) {
-	unsigned char greaterThan140 = 0x00;
-	unsigned char balanced = 0x00;
-	tempD = PINA + PINB + PINC;
-	if (tempD >= 140) {
-		greaterThan140 = 0x01;
+    tempD = 0;
+    tempD = PINA + PINB + PINC;
+	tempD = tempD >> 2;
+	if (PINA+PINB+PINC >= 141) {
+		tempD = tempD | 0x01;
 	}
-	if (PINA - PINC <= 80 || PINC - PINA <= 80) {
-		balanced = 0x02;
+	else {
+		tempD = tempD & 0xFE;
 	}
-	tempD = tempD | greaterThan140;
-	tempD = tempD | balanced;
+	if (PINA - PINC > 80 || PINC - PINA > 80) {
+		tempD = tempD | 0x02;
+	}
+	else {
+		tempD = tempD & 0xFD;
+	}
+    PORTD = tempD;
 }
 	return 0;
 
