@@ -1,8 +1,8 @@
-/*	Author: lab
+/*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
- *	Lab Section:
- *	Assignment: Lab #  Exercise #
- *	Exercise Description: [optional - include for your own benefit]
+ *	Lab Section: 023
+ *	Assignment: Lab #2  Exercise #1
+ *	Exercise Description: Garage Open At Night
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
