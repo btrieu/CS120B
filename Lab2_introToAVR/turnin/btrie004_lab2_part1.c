@@ -1,8 +1,8 @@
-/*	Author: Brandon Trieu btrie004@ucr.edu
+/*	Author: lab
  *  Partner(s) Name: 
- *	Lab Section: 023
- *	Assignment: Lab #2  Exercise #1
- *	Exercise Description: Garage Open At Night
+ *	Lab Section:
+ *	Assignment: Lab #  Exercise #
+ *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -18,8 +18,8 @@ int main(void) {
 	unsigned char tmpB = 0x00; // Temporary variable to hold the value of B
 	unsigned char tmpA = 0x00; // Temporary variable to hold the value of A
 while(1) {
-		tmpA = PINA & 0x02;
-		if (tmpA == 0x01) {
+		tmpA = PINA & 0x03;
+		if (PINA == 0x01) {
 			tmpB = 0x01;
 		} else {
 			tmpB = 0x00;
