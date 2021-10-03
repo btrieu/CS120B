@@ -31,9 +31,11 @@ while(1) {
 	if ((tempA & 0x08) == 0x08) {
 		cntavail--;
 	}		
-	PORTC = PINC | cntavail;
 	if (cntavail == 0) {
-		PORTC = PINC | 0x80;
+		PORTC = 0x80;
+	}
+	else {
+		PORTC = cntavail;
 	}
 }
 	return 0;
