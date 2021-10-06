@@ -1,9 +1,8 @@
 /*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #3  Exercise #1
- *	Exercise Description: Count the number of 1s on ports A and B and output that number on port C.
- *
+ *	Assignment: Lab #3  Exercise #2
+ *	Exercise Description: Basic car fuel sensor
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
@@ -21,34 +20,34 @@ int main(void) {
 	unsigned char tempA = 0x00;
 //	unsigned char tempB = 0x00;
 	unsigned char tempC = 0x00;
-	unsigned int i;
+//	unsigned int i;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA;
+	tempA = PINA & 0x0F;
 	tempC = 0;
 	
 	//fuel level
-	if (tempA <= 2) {
+	if (tempA > 0) {
 		tempC = tempC | 0x01;	
 	}	
 	tempC = tempC << 1;
-	if (tempA == 3 || tempA == 4) {
+	if (tempA > 2) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 5 || tempA = 6) {
+	if (tempA > 4) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 7 || tempA == 8 || tempA == 9) {
+	if (tempA > 6) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 10 || tempA == 11 || tempA == 12) {
+	if (tempA > 9) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 13 || tempA == 14 || tempA == 15) {
+	if (tempA > 12) {
 		tempC = tempC | 0x01;
 	}
 

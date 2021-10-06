@@ -20,34 +20,34 @@ int main(void) {
 	unsigned char tempA = 0x00;
 //	unsigned char tempB = 0x00;
 	unsigned char tempC = 0x00;
-	unsigned int i;
+//	unsigned int i;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA;
+	tempA = PINA & 0x0F;
 	tempC = 0;
 	
 	//fuel level
-	if (tempA == 1 || tempA == 2) {
+	if (tempA > 0) {
 		tempC = tempC | 0x01;	
 	}	
 	tempC = tempC << 1;
-	if (tempA == 3 || tempA == 4) {
+	if (tempA > 2) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 5 || tempA == 6) {
+	if (tempA > 4) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 7 || tempA == 8 || tempA == 9) {
+	if (tempA > 6) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 10 || tempA == 11 || tempA == 12) {
+	if (tempA > 9) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 13 || tempA == 14 || tempA == 15) {
+	if (tempA > 12) {
 		tempC = tempC | 0x01;
 	}
 
