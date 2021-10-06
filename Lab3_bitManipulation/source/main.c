@@ -13,12 +13,13 @@
 
 int main(void) {
     /* Insert DDR and PORT initializations */
-	DDRB = 0x00; PORTB = 0x01;
+	DDRB = 0x01; PORTB = 0x01;
 	DDRD = 0xFF; PORTD = 0xFF;
 	unsigned short weight;
     /* Insert your solution below */
     while (1) {
-    	weight = 0;
+    	//PORTB = PINB & 0x01;
+	weight = 0;
 	weight = ((weight + PIND) << 1) | (PINB & 0x01);
 	if (weight >= 70) {
 		PORTB = PINB | 0x02;

@@ -14,25 +14,21 @@
 # An example set of tests is shown below. It is important to note that these tests are not "unit tests" in 
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
-
-tests = [ {'description': 'PINA: 0x40, PINB: 0x40, PINC: 0x40 => PORTD: 0x31',
-    'steps': [ {'inputs': [('PINA',0x40),('PINB',0x40),('PINC',0x40)], 'iterations': 5 } ],
-    'expected': [('PORTD',0x31)],
+tests = [ {'description': 'This test will run first.',
+    'steps': [ {'inputs': [('PINA',<val>)], 'iterations': 1 } ],
+    'expected': [('PORT',<val>)],
     },
-    #{'description': 'PINA: 0x00, PINB: 0x23, PINC: 0x55 => PORTD: 0x1E',
-    #'steps': [ {'inputs': [('PINA',0x00)], [('PINB',0x23)], [('PINC',0x55)], 'iterations': 5 } ],
-    #'expected': [('PORTD',0x1E)],
-    #},
-    #{'description': 'PINA: 0x00, PINB: 0x38, PINC: 0x55 => PORTD: 0x22',
-    #'steps': [ {'inputs': [('PINA',0x00)], [('PINB',0x38)], [('PINC',0x55)], 'iterations': 5 } ],
-    #'expected': [('PORTD',0x22)],
-    #},
+    {'description': 'This test will run second.',
+    'steps': [ {'inputs': [('PIN', <val>)],'iterations': 1}, # Set PIN to val then run one iteration
+        {'inputs': [('PIN',<val>)], 'time': 300 }, # Set PIN to val then run 300 ms
+        {'inputs': [('PIN',<val>)], 'iterations': 1, 'expected': [('PORT',<val>)]}, 
+        {'inputs': [('PIN',<val>)], 'time': 600}, ],
+    'expected': [('PORT',<val>)],
+    },
     ]
-#watch = ['PORTB']
-
 
 # Optionally you can add a set of "watch" variables these need to be global or static and may need
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
-
+watch = ['<function>::<static-var>','PORTB']
 
