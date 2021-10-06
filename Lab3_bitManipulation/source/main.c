@@ -13,17 +13,19 @@
 
 int main(void) {
     /* Insert DDR and PORT initializations */
-	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFF; PORTB = 0x00;
-	DDRC = 0xFF; PORTC = 0x00;
-	unsigned char upperA = 0x00;
-	unsigned char lowerA = 0x00;
+	DDRB = 0x00; PORTB = 0x01;
+	DDRD = 0xFF; PORTD = 0xFF;
+	unsigned short weight;
     /* Insert your solution below */
     while (1) {
-   	upperA = PINA & 0xF0;
-	lowerA = PINA & 0x0F;
-	PORTB = (upperA >> 4) | PINB;
-	PORTC = (lowerA << 4) | PINC;
+    	weight = 0;
+	weight = ((weight + PIND) << 1) | (PINB & 0x01);
+	if (weight >= 70) {
+		PORTB = PINB | 0x02;
+	}
+	if (weight > 5 && weight < 70) {
+		PORTB = PINB | 0x04;
+	}
     }
     return 1;
 }

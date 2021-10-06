@@ -20,7 +20,9 @@ int main(void) {
 	unsigned char lowerA = 0x00;
     /* Insert your solution below */
     while (1) {
-   	upperA = PINA & 0xF0;
+   	PORTB = 0;
+	PORTC = 0;
+	upperA = PINA & 0xF0;
 	lowerA = PINA & 0x0F;
 	PORTB = (upperA >> 4) | PINB;
 	PORTC = (lowerA << 4) | PINC;
