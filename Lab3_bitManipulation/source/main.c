@@ -1,9 +1,8 @@
 /*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #3  Exercise #1
- *	Exercise Description: Count the number of 1s on ports A and B and output that number on port C.
- *
+ *	Assignment: Lab #3  Exercise #2
+ *	Exercise Description: Basic car fuel sensor
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
@@ -28,7 +27,7 @@ int main(void) {
 	tempC = 0;
 	
 	//fuel level
-	if (tempA <= 2) {
+	if (tempA == 1 || tempA == 2) {
 		tempC = tempC | 0x01;	
 	}	
 	tempC = tempC << 1;
@@ -36,7 +35,7 @@ int main(void) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
-	if (tempA == 5 || tempA = 6) {
+	if (tempA == 5 || tempA == 6) {
 		tempC = tempC | 0x01;
 	}
 	tempC = tempC << 1;
