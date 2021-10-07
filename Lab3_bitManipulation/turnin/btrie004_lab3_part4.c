@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #3  Exercise #2
- *	Exercise Description: Basic car fuel sensor
+ *	Assignment: Lab #3  Exercise #4
+ *	Exercise Description: Mapping lower nibbles to upper nibbles and vice versa
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */

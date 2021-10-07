@@ -1,8 +1,8 @@
-/*	Author: lab
+/*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
- *	Lab Section:
- *	Assignment: Lab #  Exercise #
- *	Exercise Description: [optional - include for your own benefit]
+ *	Lab Section: 023
+ *	Assignment: Lab #4  Exercise #2
+ *	Exercise Description: Counter with buttons to increment/decrement
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -12,45 +12,52 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States {Start, PB0_ON, TRANS_PB1_ON, PB1_ON, TRANS_PB0_ON}state;
+enum States {Start, Init, Increment, Decrement, Reset}state;
 
 void Tick() {
 	switch(state) {
 		case Start:
-			PORTB = 0x01;
-			state = PB0_ON;
+			PORTC = 0x07;
+			state = Init;
 			break;
-		case PB0_ON:
-			if ((PINA & 0x01) == 0x01) { state = TRANS_PB1_ON; }
-			else { state = PB0_ON; }
+		case Init:
+			if (PINA == 0x03) { state = Reset; }
+			else if (PINA == 0x00) { state = Init; }
+			else if (PINA == 0x01) { state = Increment; }
+			else if (PINA == 0x02) { state = Decrement; }
+			else { PORTA = 0xFF; }
 			break;
-		case TRANS_PB1_ON:
-			if ((PINA & 0x01) == 0x01) { state = TRANS_PB1_ON; }
-			else { state = PB1_ON; }
+		case Increment:
+			if (PINA == 0x03) { state = Reset; }
+			else if (!(PINA == 0x03)) { state = Init; }
+			else { PORTA = 0xFF; }
 			break;
-		case PB1_ON:
-			if ((PINA & 0x01) == 0x01) { state = TRANS_PB0_ON; }
-			else { state = PB1_ON; }
+		case Decrement:
+			if (PINA == 0x03) { state = Reset; }
+			else if (!(PINA == 0x03)) { state = Init; }
+			else { PORTA = 0xFF; }
 			break;
-		case TRANS_PB0_ON:
-			if ((PINA & 0x01) == 0x01) { state = TRANS_PB0_ON; }
-			else { state = PB0_ON; }
+		case Reset:
+			state = Init;
 			break;
 	}
 	switch(state) {
 		case Start:
 			break;
-		case PB0_ON:
-			PORTB = 0x01;
+		case Init:
 			break;
-		case TRANS_PB1_ON:
-			PORTB = 0x02;
+		case Increment:
+			if (PINC < 9) {	
+				PORTC = PINC++;
+			}
 			break;
-		case PB1_ON:
-			PORTB = 0x02;
+		case Decrement:
+			if (PINC > 0) {
+				PORTC = PINC--;
+			}
 			break;
-		case TRANS_PB0_ON:
-			PORTB = 0x01;
+		case Reset:
+			PORTC = 0x00;
 			break;
 	}
 }
@@ -58,7 +65,7 @@ void Tick() {
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFF; PORTB = 0x00;
+	DDRC = 0xFF; PORTC = 0x00;
 	state = Start;
     /* Insert your solution below */
     while (1) {
