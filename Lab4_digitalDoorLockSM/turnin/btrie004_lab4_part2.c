@@ -21,24 +21,25 @@ void Tick() {
 			state = Init;
 			break;
 		case Init:
-			if (PINA == 0x03) { state = Reset; }
+			if ((PINA & 0x03) == 0x03) { state = Reset; }
 			else if (PINA == 0x00) { state = Init; }
-			else if (PINA == 0x01) { state = Increment; }
-			else if (PINA == 0x02) { state = Decrement; }
+			else if ((PINA & 0x01) == 0x01) { state = Increment; }
+			else if ((PINA & 0x02) == 0x02) { state = Decrement; }
 			else { PORTA = 0xFF; }
 			break;
 		case Increment:
-			if (PINA == 0x03) { state = Reset; }
-			else if (!(PINA == 0x03)) { state = Init; }
+			if ((PINA & 0x03) == 0x03) { state = Reset; }
+			else if (!((PINA & 0x03) == 0x03)) { state = Init; }
 			else { PORTA = 0xFF; }
 			break;
 		case Decrement:
-			if (PINA == 0x03) { state = Reset; }
-			else if (!(PINA == 0x03)) { state = Init; }
+			if ((PINA & 0x03) == 0x03) { state = Reset; }
+			else if (!((PINA & 0x03) == 0x03)) { state = Init; }
 			else { PORTA = 0xFF; }
 			break;
 		case Reset:
-			state = Init;
+			if ((PINA & 0x03) == 0x03) { state = Reset; }
+			else { state = Init; }
 			break;
 	}
 	switch(state) {
@@ -48,12 +49,12 @@ void Tick() {
 			break;
 		case Increment:
 			if (PINC < 9) {	
-				PORTC = PINC++;
+				PORTC = PINC+1;
 			}
 			break;
 		case Decrement:
 			if (PINC > 0) {
-				PORTC = PINC--;
+				PORTC = PINC-1;
 			}
 			break;
 		case Reset:

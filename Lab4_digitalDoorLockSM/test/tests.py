@@ -15,15 +15,33 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 tests = [
-    {'description': '1x On Off Cycle',
+    {'description': 'Increment 7->9, then Reset to 0',
         'steps': [ 
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x02)]}, 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x01)]}, 
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x08)]}, 
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x08)]},
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+       
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x09)]}, 
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x08)]}, 
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x08)]},
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
+
+        {'inputs': [('PINA',0x03)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x00)]}, 
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
         ], 
-        'expected': [('PORTB',0x01)],
+        'expected': [('PORTC',0x00)],
     },
     {'description': 'Hang in PB1_ON',
         'steps': [ 
@@ -40,5 +58,5 @@ tests = [
 # Optionally you can add a set of "watch" variables these need to be global or static and may need
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
-watch = ['state','PORTB']
+watch = ['state','PINA','PORTC']
 
