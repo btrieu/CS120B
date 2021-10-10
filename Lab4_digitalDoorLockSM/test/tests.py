@@ -15,21 +15,18 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 tests = [
-    {'description': 'Entering correct combo: #Y, then locking using combination',
+    {'description': 'Entering correct combo: #Y',
         'steps': [ 
         {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
         {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
         {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-
-        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x01)]}, 
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x01)]}, 
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
         ], 
-        'expected': [('PORTB',0x00)],
+        'expected': [('PORTB',0x01)],
     },
-    {'description': 'Entering incorrect combo: #X, followed by correct combo',
+    {'description': 'Entering incorrect combo: #X#X, followed by correct combo',
         'steps': [ 
         {'inputs': [('PINA',0x80)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
         {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
@@ -37,7 +34,11 @@ tests = [
         {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
         {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
         {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},       
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x00)]},       
+        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
         ], 
         'expected': [('PORTB',0x01)],
     },

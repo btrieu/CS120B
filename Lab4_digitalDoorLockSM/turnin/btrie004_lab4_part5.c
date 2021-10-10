@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #4  Exercise #3
- *	Exercise Description: Household digital combination lock 
+ *	Assignment: Lab #4  Exercise #5
+ *	Exercise Description: Household digital combination lock with 4 digit passcode
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
