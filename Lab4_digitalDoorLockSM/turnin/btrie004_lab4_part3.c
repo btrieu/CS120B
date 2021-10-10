@@ -18,7 +18,7 @@ enum States {Start, Lock, ReadInput, Unlock}state;
 unsigned char passcodeDigits = 2;
 char passcode[2] = {'#', 'Y'};
 char userInput[2];
-unsigned char passcodeCounter = 0;
+unsigned char passcodeCounter;
 
 void Tick() {
 	switch(state) {
@@ -31,7 +31,7 @@ void Tick() {
 			break;
 		case ReadInput:
 			if ((PINA&0x01) == 0x01 || (PINA&0x02) == 0x02 || (PINA&0x04) == 0x04) {
-			       	passcodeCounter++;
+				passcodeCounter++;
 				if (passcodeCounter < passcodeDigits) {
 					if ((PINA&0x07) == 0x01) { userInput[passcodeCounter-1] = 'X'; }
 					if ((PINA&0x07) == 0x02) { userInput[passcodeCounter-1] = 'Y'; }
@@ -61,11 +61,16 @@ void Tick() {
 			break;
 		case Lock:
 			passcodeCounter = 0;
+			userInput[0] = 0;
+			userInput[1] = 0;
 			PORTB = 0x00;
 			break;
 		case ReadInput:
 			break;
 		case Unlock:
+			passcodeCounter = 0;
+			userInput[0] = 0;
+			userInput[1] = 0;		
 			PORTB = 0x01;
 			break;
 	}

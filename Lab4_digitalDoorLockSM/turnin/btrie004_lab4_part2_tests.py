@@ -15,7 +15,7 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 tests = [
-    {'description': 'Increment 7->9, then Reset to 0',
+    {'description': 'Increment 7->9, increment over 9, decrement 9->7, reset, decrement under 0',
         'steps': [ 
         {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
         {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x08)]}, 
@@ -42,16 +42,6 @@ tests = [
         {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
         ], 
         'expected': [('PORTC',0x00)],
-    },
-    {'description': 'Hang in PB1_ON',
-        'steps': [ 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x02)]}, 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]}, 
-        ], 
-        'expected': [('PORTB',0x02)],
     },
     ]
 

@@ -15,48 +15,31 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 tests = [
-    {'description': 'Increment 7->9, then Reset to 0',
+    {'description': 'Entering correct combo: #Y',
         'steps': [ 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x08)]}, 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x08)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-       
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x09)]}, 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x08)]}, 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x08)]},
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
-
-        {'inputs': [('PINA',0x03)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x00)]}, 
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
-        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
         ], 
-        'expected': [('PORTC',0x00)],
+        'expected': [('PORTB',0x01)],
     },
-    {'description': 'Hang in PB1_ON',
+    {'description': 'Entering incorrect combo: #X, followed by correct combo',
         'steps': [ 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x02)]}, 
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]},
-        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x02)]}, 
+        {'inputs': [('PINA',0x80)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x01)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
+        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},       
         ], 
-        'expected': [('PORTB',0x02)],
+        'expected': [('PORTB',0x01)],
     },
     ]
 
 # Optionally you can add a set of "watch" variables these need to be global or static and may need
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
-watch = ['state','PINA','PORTC']
+watch = ['state','PORTB','PINA','userInput[0]','userInput[1]','passcodeCounter']
 
