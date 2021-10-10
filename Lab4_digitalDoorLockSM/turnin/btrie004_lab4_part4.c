@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #4  Exercise #3
- *	Exercise Description: Household digital combination lock 
+ *	Assignment: Lab #4  Exercise #4
+ *	Exercise Description: Household digital combination lock with locking passcode feature
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -53,6 +53,27 @@ void Tick() {
 			break;
 		case Unlock:
 			if ((PINA & 0x80) == 0x80) { state = Lock; }
+
+			else if ((PINA&0x01) == 0x01 || (PINA&0x02) == 0x02 || (PINA&0x04) == 0x04) {
+			       	passcodeCounter++;
+				if (passcodeCounter < passcodeDigits) {
+					if ((PINA&0x07) == 0x01) { userInput[passcodeCounter-1] = 'X'; }
+					if ((PINA&0x07) == 0x02) { userInput[passcodeCounter-1] = 'Y'; }
+					if ((PINA&0x07) == 0x04) { userInput[passcodeCounter-1] = '#'; }
+					state = Unlock;
+				}
+				else {
+					if ((PINA&0x07) == 0x01) { userInput[passcodeCounter-1] = 'X'; }
+					if ((PINA&0x07) == 0x02) { userInput[passcodeCounter-1] = 'Y'; }
+					if ((PINA&0x07) == 0x04) { userInput[passcodeCounter-1] = '#'; }
+					if (passcode[0] == userInput[0] && 
+					passcode[1] == userInput[1]) {
+						state = Lock; 
+					}
+					else { state = Unlock; }
+				}
+		       	}
+
 			else { state = Unlock; }
 			break;
 	}
@@ -61,11 +82,16 @@ void Tick() {
 			break;
 		case Lock:
 			passcodeCounter = 0;
+			userInput[0] = 0;
+			userInput[1] = 0;
 			PORTB = 0x00;
 			break;
 		case ReadInput:
 			break;
 		case Unlock:
+			passcodeCounter = 0;
+			userInput[0] = 0;
+			userInput[1] = 0;
 			PORTB = 0x01;
 			break;
 	}

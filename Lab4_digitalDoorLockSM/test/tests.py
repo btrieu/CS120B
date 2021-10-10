@@ -15,14 +15,19 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 tests = [
-    {'description': 'Entering correct combo: #Y',
+    {'description': 'Entering correct combo: #Y, then locking using combination',
         'steps': [ 
         {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
         {'inputs': [('PINA',0x00)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
         {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
         {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
+
+        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x01)]}, 
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
+        {'inputs': [('PINA',0x04)], 'iterations': 1, 'expected': [('PORTB',0x01)]}, 
+        {'inputs': [('PINA',0x02)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
         ], 
-        'expected': [('PORTB',0x01)],
+        'expected': [('PORTB',0x00)],
     },
     {'description': 'Entering incorrect combo: #X, followed by correct combo',
         'steps': [ 
