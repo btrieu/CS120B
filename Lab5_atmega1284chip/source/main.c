@@ -29,17 +29,17 @@ void Tick() {
 			state = IncrementWait;
 			break;
 		case IncrementWait:
-			if ((~PINA & 0x01) == 0x01) { state = IncrementWait; }
+			if ((~PINA & 0x03) == 0x00) { state = Wait; }
 			else if ((~PINA & 0x03) == 0x03) { state = Reset; }
-			else { state = Wait; }
+			else { state = IncrementWait; }
 			break;
 		case Decrement:
 			state = DecrementWait;
 			break;
 		case DecrementWait:
-			if ((~PINA & 0x02) == 0x02) { state = DecrementWait; }
+			if ((~PINA & 0x03) == 0x00) { state = Wait; }
 			else if ((~PINA & 0x03) == 0x03) { state = Reset; }
-			else { state = Wait; }
+			else { state = DecrementWait; }
 			break;
 		case Reset:
 			state = ResetWait;
