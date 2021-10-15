@@ -1,7 +1,7 @@
 /*	Author: Brandon Trieu btrie004@ucr.edu
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #3  Exercise #2
+ *	Assignment: Lab #5  Exercise #1
  *	Exercise Description: Basic car fuel sensor
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -23,7 +23,7 @@ int main(void) {
 //	unsigned int i;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA & 0x0F;
+	tempA = (~PINA) & 0x0F;
 	tempC = 0;
 	
 	//fuel level

@@ -23,7 +23,7 @@ int main(void) {
 //	unsigned int i;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA & 0x0F;
+	tempA = (~PINA) & 0x0F;
 	tempC = 0;
 	
 	//fuel level
