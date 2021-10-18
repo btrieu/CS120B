@@ -14,25 +14,24 @@
 # An example set of tests is shown below. It is important to note that these tests are not "unit tests" in 
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
-tests = [ {'description': 'PINA = 0x00 -> PORTC = 0x40',
-    'steps': [ {'inputs': [('PINA',0x00)], 'iterations': 5 } ],
-    'expected': [('PORTC',0x40)],
-    },
-    {'description': 'PINA = 0xFF -> PORTC = 0x3F',
-    'steps': [ {'inputs': [('PINA',0xFF)], 'iterations': 5 } ],
-    'expected': [('PORTC',0x3F)],
-    },
-    {'description': 'PINA = 0xA3 -> PORTC = 0x70',
-    'steps': [ {'inputs': [('PINA',0xA3)], 'iterations': 5 } ],
-    'expected': [('PORTC',0x70)],
-    },
-    {'description': 'PINA = 0xA9 -> PORTC = 0x3C',
-    'steps': [ {'inputs': [('PINA',0xA9)], 'iterations': 5 } ],
-    'expected': [('PORTC',0x3C)],
-    },
-    {'description': 'PINA = 0xB4 -> PORTC = 0x70',
-    'steps': [ {'inputs': [('PINA',0xB4)], 'iterations': 5 } ],
-    'expected': [('PORTC',0x70)],
+tests = [ 
+    {'description': '7 -> 9++ ->0-- -> 2 -> 0',
+        'steps': [ 
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x07)]},
+        {'inputs': [('PINA',0xF2)], 'iterations': 1, 'expected': [('PORTC',0x08)]},
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x08)]}, 
+        {'inputs': [('PINA',0xF2)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x09)]}, 
+        {'inputs': [('PINA',0xF2)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x09)]},
+        {'inputs': [('PINA',0xFC)], 'iterations': 1, 'expected': [('PORTC',0x00)]},
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x00)]}, 
+        {'inputs': [('PINA',0xFE)], 'iterations': 1, 'expected': [('PORTC',0x01)]},
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x01)]}, 
+        {'inputs': [('PINA',0xFE)], 'iterations': 1, 'expected': [('PORTC',0x02)]}, 
+        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTC',0x02)]},
+        ],
+        'expected': [('PORTC',0x40)],
     },
 
     ]
