@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu (btrie004)
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #6  Exercise #1
- *	Exercise Description: 
+ *	Assignment: Lab #6  Exercise #2
+ *	Exercise Description: "Stop the Light" Game
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.

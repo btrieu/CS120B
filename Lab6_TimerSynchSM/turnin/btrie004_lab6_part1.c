@@ -2,7 +2,7 @@
  *  Partner(s) Name: 
  *	Lab Section: 023
  *	Assignment: Lab #6  Exercise #1
- *	Exercise Description: 
+ *	Exercise Description: Cycle PB0-PB2 every second.
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -40,6 +40,7 @@ void Tick() {
 
 int main(void) {
 	DDRB = 0xFF; PORTB = 0x00;
+	state = Start;
 	TimerSet(1000);
 	TimerOn();
 	while(1) {
