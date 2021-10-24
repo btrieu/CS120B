@@ -14,28 +14,29 @@
 # An example set of tests is shown below. It is important to note that these tests are not "unit tests" in 
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
-tests = [ 
-    {'description': '7 -> 9++ ->0-- -> 2 -> 0',
+tests = [
+    {'description': 'Cycle 4x',
         'steps': [ 
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x07)]},
-        {'inputs': [('PINA',0xF2)], 'iterations': 1, 'expected': [('PORTB',0x08)]},
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x08)]}, 
-        {'inputs': [('PINA',0xF2)], 'iterations': 1, 'expected': [('PORTB',0x09)]},
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x09)]}, 
-        {'inputs': [('PINA',0xF2)], 'iterations': 1, 'expected': [('PORTB',0x09)]},
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x09)]},
-        {'inputs': [('PINA',0xFC)], 'iterations': 1, 'expected': [('PORTB',0x00)]},
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x00)]}, 
-        {'inputs': [('PINA',0xFE)], 'iterations': 1, 'expected': [('PORTB',0x01)]},
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x01)]}, 
-        {'inputs': [('PINA',0xFE)], 'iterations': 1, 'expected': [('PORTB',0x02)]}, 
-        {'inputs': [('PINA',0x0F)], 'iterations': 1, 'expected': [('PORTB',0x02)]},
-        ],
-        'expected': [('PORTB',0x40)],
+        {'iterations': 1, 'expected': [('PORTB',0x01)]},
+        {'iterations': 1, 'expected': [('PORTB',0x02)]},
+        {'iterations': 1, 'expected': [('PORTB',0x04)]}, 
+        {'iterations': 1, 'expected': [('PORTB',0x01)]},
+        {'iterations': 1, 'expected': [('PORTB',0x02)]}, 
+        {'iterations': 1, 'expected': [('PORTB',0x04)]},
+        {'iterations': 1, 'expected': [('PORTB',0x01)]},
+        {'iterations': 1, 'expected': [('PORTB',0x02)]},
+        {'iterations': 1, 'expected': [('PORTB',0x04)]}, 
+        {'iterations': 1, 'expected': [('PORTB',0x01)]},
+        {'iterations': 1, 'expected': [('PORTB',0x02)]}, 
+        {'iterations': 1, 'expected': [('PORTB',0x04)]}, 
+        {'iterations': 1, 'expected': [('PORTB',0x01)]},
+        ], 
+        'expected': [('PORTB',0x01)],
     },
-
     ]
 
 # Optionally you can add a set of "watch" variables these need to be global or static and may need
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
+#watch = ['state','PORTB','PINA','userInput[0]','userInput[1]','passcodeCounter']
+watch = ['state','PORTB']
