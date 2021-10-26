@@ -2,7 +2,7 @@
  *  Partner(s) Name: 
  *	Lab Section: 023
  *	Assignment: Lab #8  Exercise #3 
- *	Exercise Description: Light when ADC/2>=maxADC
+ *	Exercise Description: More ADC, More Lights
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
