@@ -1,7 +1,7 @@
 /*	Author: Brandon Trieu (btrie004)
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #8  Exercise #3 
+ *	Assignment: Lab #8  Exercise #4 
  *	Exercise Description: More ADC, More Lights
  *
  *	I acknowledge all content contained herein, excluding template or example
