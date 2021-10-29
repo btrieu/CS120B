@@ -3,7 +3,7 @@
  *	Lab Section: 023
  *	Assignment: Lab #8  Exercise #2
  *	Exercise Description: Display ADC from photoresistor
- *
+ *	Demo Link: https://drive.google.com/file/d/17HO09P_s7HK9nYMgp7qZnqwnOrM6BjH5/view?usp=sharing
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */

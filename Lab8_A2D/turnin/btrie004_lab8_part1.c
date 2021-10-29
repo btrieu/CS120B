@@ -3,7 +3,7 @@
  *	Lab Section: 023
  *	Assignment: Lab #8  Exercise #1
  *	Exercise Description: Display ADC from potentiometer
- *
+ *	Demo Link: https://drive.google.com/file/d/17GfgBgrJBB2PMrvIJsIgJdxpxPYAatYi/view?usp=sharing
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */

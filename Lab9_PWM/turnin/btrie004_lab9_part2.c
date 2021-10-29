@@ -3,7 +3,7 @@
  *	Lab Section: 023
  *	Assignment: Lab #9  Exercise #2
  *	Exercise Description: Single Octave Scale
- *
+ *	Demo Link: https://drive.google.com/file/d/17DX5QbGj2GuULsciwhvr_xO-zQG9M0oN/view?usp=sharing
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
