@@ -3,7 +3,7 @@
  *	Lab Section: 023
  *	Assignment: Lab #10  Exercise #2
  *	Exercise Description: Concurrent SM Light Show with Different Periods
- *
+ *	Demo Link: https://drive.google.com/file/d/19EdBGplPw4avSZbmpNwfApEF5M0ffQAV/view?usp=sharing
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
