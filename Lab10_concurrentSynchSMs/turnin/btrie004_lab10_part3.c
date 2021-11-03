@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu (btrie004)
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #10  Exercise #4
- *	Exercise Description: Concurrent SM Light Show with Switch-Operated Speaker and Pitch Adjustment
+ *	Assignment: Lab #10  Exercise #3
+ *	Exercise Description: Concurrent SM Light Show with Switch-Operated Speaker
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -22,8 +22,8 @@ typedef struct task {
    int (*TickFct)(int);        // Task tick function
 } task;
 
-task tasks[5];
-const unsigned short tasksNum = 5;
+task tasks[4];
+const unsigned short tasksNum = 4;
 
 void TimerISR() {
 	unsigned char i;
@@ -134,48 +134,6 @@ int TickFct_CombineLEDsSM(int state){
         return state;
 }
 
-enum ButtonPollingSM_States {BPSM_Start, BPSM_Wait, BPSM_Up, BPSM_Down, BPSM_Release};
-int TickFct_ButtonPollingSM(int state) {
-	switch(state) {
-		case BPSM_Start:
-			state = BPSM_Wait;
-			break;
-		case BPSM_Wait:
-			if ((~PINA & 0x01) == 0x01) { state = BPSM_Up; }
-			else if ((~PINA & 0x02) == 0x02) { state = BPSM_Down; }
-			break;
-		case BPSM_Up:
-			state = BPSM_Release;
-			break;
-		case BPSM_Down:
-			state = BPSM_Release;
-			break;
-		case BPSM_Release:
-			if ((~PINA & 0x03) == 0x00) { state = BPSM_Wait; }
-			else { state = BPSM_Release; }
-			break;
-	}
-	switch(state) {
-		case BPSM_Start:
-                        break;
-                case BPSM_Wait:
-                        break;
-                case BPSM_Up:
-			if (tasks[2].period > 1) {
-				tasks[2].period--;
-			}
-			break;
-                case BPSM_Down:
-			if (tasks[2].period < 1000) {
-				tasks[2].period++;
-			}
-			break;
-                case BPSM_Release:
-                        break;
-	}
-	return state;
-}
-
 int main(void) {
     	/* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
@@ -201,11 +159,6 @@ int main(void) {
 	tasks[i].period = 1;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_CombineLEDsSM;
-	++i;
-        tasks[i].state = BPSM_Start;
-        tasks[i].period = 100;
-        tasks[i].elapsedTime = 0;
-        tasks[i].TickFct = &TickFct_ButtonPollingSM;	
 	
 	TimerSet(timerPeriod);
 	TimerOn();

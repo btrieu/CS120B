@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu (btrie004)
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #10  Exercise #4
- *	Exercise Description: Concurrent SM Light Show with Switch-Operated Speaker and Pitch Adjustment
+ *	Assignment: Lab #10  Exercise #2
+ *	Exercise Description: Concurrent SM Light Show with Different Periods
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -22,8 +22,8 @@ typedef struct task {
    int (*TickFct)(int);        // Task tick function
 } task;
 
-task tasks[5];
-const unsigned short tasksNum = 5;
+task tasks[3];
+const unsigned short tasksNum = 3;
 
 void TimerISR() {
 	unsigned char i;
@@ -36,9 +36,8 @@ void TimerISR() {
 	}
 }
 
-unsigned char threeLEDs = 0x00;
-unsigned char BlinkingLEDSM = 0x00;
-unsigned char speaker = 0x00;
+unsigned char threeLEDs = 0;
+unsigned char BlinkingLEDSM = 0;
 
 enum ThreeLEDsSM_States {TLSM_Start, TLSM_Run};
 int TickFct_ThreeLEDsSM(int state){
@@ -86,37 +85,9 @@ int TickFct_BlinkingLEDSM(int state){
 	return state;
 }
 
-enum SpeakerSM_States {SPSM_Start, SPSM_Off, SPSM_On};
-int TickFct_SpeakerSM(int state){
-	switch(state) {
-                case SPSM_Start:
-                        state = SPSM_Off;
-                        break;
-                case SPSM_Off:
-                        if (((PINA & 0x04) == 0x04)) { state = SPSM_On; }
-			else { state = SPSM_Off; } 
-                        break;
-		case SPSM_On:
-                        if (((PINA & 0x04) == 0x04)) { state = SPSM_On; }
-			else { state = SPSM_Off; } 
-                        break;
-        }
-        switch(state) {
-                case SPSM_Start:
-                        break;
-                case SPSM_Off:
-			speaker = 0x00;
-			break;
-		case SPSM_On:
-			if (speaker == 0x00) { speaker = 0x10; }
-			else if (speaker == 0x10) { speaker = 0x00; }
-			break;
-        }
-        return state;
-}
 enum CombineLEDsSM_States {CLSM_Start, CLSM_Run};
 int TickFct_CombineLEDsSM(int state){
-	switch(state) {
+switch(state) {
                 case CLSM_Start:
                         state = CLSM_Run;
                         break;
@@ -128,57 +99,14 @@ int TickFct_CombineLEDsSM(int state){
                 case CLSM_Start:
                         break;
                 case CLSM_Run:
-                        PORTB = BlinkingLEDSM | threeLEDs | speaker;
+                        PORTB = BlinkingLEDSM | threeLEDs;
 			break;
         }
         return state;
-}
-
-enum ButtonPollingSM_States {BPSM_Start, BPSM_Wait, BPSM_Up, BPSM_Down, BPSM_Release};
-int TickFct_ButtonPollingSM(int state) {
-	switch(state) {
-		case BPSM_Start:
-			state = BPSM_Wait;
-			break;
-		case BPSM_Wait:
-			if ((~PINA & 0x01) == 0x01) { state = BPSM_Up; }
-			else if ((~PINA & 0x02) == 0x02) { state = BPSM_Down; }
-			break;
-		case BPSM_Up:
-			state = BPSM_Release;
-			break;
-		case BPSM_Down:
-			state = BPSM_Release;
-			break;
-		case BPSM_Release:
-			if ((~PINA & 0x03) == 0x00) { state = BPSM_Wait; }
-			else { state = BPSM_Release; }
-			break;
-	}
-	switch(state) {
-		case BPSM_Start:
-                        break;
-                case BPSM_Wait:
-                        break;
-                case BPSM_Up:
-			if (tasks[2].period > 1) {
-				tasks[2].period--;
-			}
-			break;
-                case BPSM_Down:
-			if (tasks[2].period < 1000) {
-				tasks[2].period++;
-			}
-			break;
-                case BPSM_Release:
-                        break;
-	}
-	return state;
 }
 
 int main(void) {
     	/* Insert DDR and PORT initializations */
-	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
 	/* Insert your solution below */
 	unsigned char i = 0;
@@ -192,20 +120,10 @@ int main(void) {
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_BlinkingLEDSM;
 	++i;
-	tasks[i].state = SPSM_Start;
-	tasks[i].period = 2;
-	tasks[i].elapsedTime = 0;
-	tasks[i].TickFct = &TickFct_SpeakerSM;
-	++i;
 	tasks[i].state = CLSM_Start;
 	tasks[i].period = 1;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_CombineLEDsSM;
-	++i;
-        tasks[i].state = BPSM_Start;
-        tasks[i].period = 100;
-        tasks[i].elapsedTime = 0;
-        tasks[i].TickFct = &TickFct_ButtonPollingSM;	
 	
 	TimerSet(timerPeriod);
 	TimerOn();
