@@ -24,8 +24,8 @@ typedef struct task {
    int (*TickFct)(int);        // Task tick function
 } task;
 
-task tasks[2];
-const unsigned short tasksNum = 2;
+task tasks[1];
+const unsigned short tasksNum = 1;
 
 void TimerISR() {
 	unsigned char i;
@@ -39,36 +39,6 @@ void TimerISR() {
 }
 
 unsigned char keypad;
-
-const unsigned char string[69] = "                CS120B is Legend... wait for it DARY!                ";
-unsigned char i = 0;
-unsigned char k = 0;
-unsigned char prev;
-
-enum ScrollingMessageSM_States {SMSM_Start, SMSM_Run};
-int TickFct_ScrollingMessageSM(int state){
-	switch(state) {
-		case SMSM_Start:
-			state = SMSM_Run;
-			break;
-		case SMSM_Run:
-			state = SMSM_Run;
-			break;
-	}
-	switch(state) {
-		case SMSM_Start:
-			break;
-		case SMSM_Run:
-			LCD_Cursor(17);
-			if (k >= 53) { k = 0; }
-			prev = k;
-			for (i = 0; i < 16; ++i) {
-				LCD_WriteData(string[k++]);
-			}
-			k = prev+1;
-	}
-	return state;
-}
 
 enum KeypadSM_States {KPSM_Start, KPSM_Run};
 int TickFct_KeypadSM(int state){
@@ -103,12 +73,7 @@ int main(void) {
 	tasks[i].period = 500;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_KeypadSM;
-	++i;
-	tasks[i].state = SMSM_Start;
-	tasks[i].period = 400;
-	tasks[i].elapsedTime = 0;
-	tasks[i].TickFct = &TickFct_ScrollingMessageSM;
-
+	
 	LCD_init();
 	TimerSet(timerPeriod);
 	TimerOn();
