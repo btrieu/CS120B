@@ -1,8 +1,8 @@
 /*	Author: Brandon Trieu (btrie004)
  *  Partner(s) Name: 
  *	Lab Section: 023
- *	Assignment: Lab #11  Exercise #2
- *	Exercise Description: Scrolling Message
+ *	Assignment: Lab #11  Exercise #3
+ *	Exercise Description: Display Buttonpress on LCD
  *	Demo Link: N/A
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -40,32 +40,24 @@ void TimerISR() {
 
 unsigned char keypad;
 
-const unsigned char string[69] = "                CS120B is Legend... wait for it DARY!                ";
-unsigned char i = 0;
-unsigned char k = 0;
-unsigned char prev;
-
-enum ScrollingMessageSM_States {SMSM_Start, SMSM_Run};
-int TickFct_ScrollingMessageSM(int state){
+enum DisplayCharSM_States {DCSM_Start, DCSM_Run};
+int TickFct_DisplayCharSM(int state){
 	switch(state) {
-		case SMSM_Start:
-			state = SMSM_Run;
+		case DCSM_Start:
+			state = DCSM_Run;
 			break;
-		case SMSM_Run:
-			state = SMSM_Run;
+		case DCSM_Run:
+			state = DCSM_Run;
 			break;
 	}
 	switch(state) {
-		case SMSM_Start:
+		case DCSM_Start:
 			break;
-		case SMSM_Run:
-			LCD_Cursor(17);
-			if (k >= 53) { k = 0; }
-			prev = k;
-			for (i = 0; i < 16; ++i) {
-				LCD_WriteData(string[k++]);
+		case DCSM_Run:
+			if (keypad != '\0') {
+				LCD_Cursor(1);
+				LCD_WriteData(keypad);
 			}
-			k = prev+1;
 	}
 	return state;
 }
@@ -104,10 +96,10 @@ int main(void) {
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_KeypadSM;
 	++i;
-	tasks[i].state = SMSM_Start;
-	tasks[i].period = 400;
+	tasks[i].state = DCSM_Start;
+	tasks[i].period = 50;
 	tasks[i].elapsedTime = 0;
-	tasks[i].TickFct = &TickFct_ScrollingMessageSM;
+	tasks[i].TickFct = &TickFct_DisplayCharSM;
 
 	LCD_init();
 	TimerSet(timerPeriod);
