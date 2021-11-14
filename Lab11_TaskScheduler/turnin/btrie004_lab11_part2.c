@@ -3,7 +3,7 @@
  *	Lab Section: 023
  *	Assignment: Lab #11  Exercise #2
  *	Exercise Description: Scrolling Message
- *	Demo Link: N/A
+ *	Demo Link: https://drive.google.com/file/d/1D3H8AYm5Jrq-9rhL-ourjkb8twA9qdje/view?usp=sharing
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
