@@ -23,6 +23,7 @@ void Joystick_init() {
 }
 
 char Joystick_poll() {
+	unsigned char val;
 	ADMUX = 0x01;
 	ADCSRA |= (1 << ADSC);
 	while (ADCSRA & (1 << ADSC));
@@ -33,42 +34,45 @@ char Joystick_poll() {
 	js_hcurr = ADC;
 	if ( ((js_vcurr <= (js_vdef+2)) && (js_vcurr >= (js_vdef-2)))
 	&&   ((js_hcurr <= (js_hdef+2)) && (js_hcurr >= (js_hdef-2))) )
-       	{ return 0x00; }
+       	{ val = 0x00; }
 	
 	else if ( ((js_vcurr > (js_vdef+2)) )
 	&&   ((js_hcurr <= (js_hdef+2)) && (js_hcurr >= (js_hdef-2))) )
-       	{ return 0x01; }
+       	{ val = 0x01; }
 
 	else if ( ((js_vcurr > (js_vdef+2)) )
 	&&   ( (js_hcurr < (js_hdef-2))) )
-       	{ return 0x02; }
+       	{ val = 0x02; }
 	
 	else if ( ((js_vcurr <= (js_vdef+2)) && (js_vcurr >= (js_vdef-2)))
 	&&   ( (js_hcurr < (js_hdef-2))) )
-       	{ return 0x03; }
+       	{ val = 0x03; }
 	
 	else if ( ((js_vcurr < (js_vdef-2)) )
 	&&   ( (js_hcurr < (js_hdef-2))) )
-       	{ return 0x04; }
+       	{ val = 0x04; }
 	
 	else if ( ((js_vcurr < (js_vdef-2)) )
 	&&   ((js_hcurr <= (js_hdef+2)) && (js_hcurr >= (js_hdef-2))) )
-       	{ return 0x05; }
+       	{ val = 0x05; }
 	
 	else if ( ((js_vcurr < (js_vdef-2)) )
 	&&   ((js_hcurr > (js_hdef+2))) )
-       	{ return 0x06; }
+       	{ val = 0x06; }
 	
 	else if ( ((js_vcurr <= (js_vdef+2)) && (js_vcurr >= (js_vdef-2)))
 	&&   ((js_hcurr > (js_hdef+2))) )
-       	{ return 0x07; }
+       	{ val = 0x07; }
 	
 	else if ( ((js_vcurr > (js_vdef+2)) )
 	&&   ((js_hcurr > (js_hdef+2))) )
-       	{ return 0x08; }
-
+       	{ val = 0x08; }
 	
-	else { return 0x04; }
+	else { val = 0x00; }
+
+	if ((~PINA & 0x04) == 0x04) { val |= 0x10; }
+	
+	return val;
 }
 
 #endif

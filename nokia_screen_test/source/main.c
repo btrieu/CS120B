@@ -31,7 +31,7 @@ int main(void) {
 	DDRD = 0xFF; PORTD = 0x00;
 	DDRC = 0xFF; PORTC = 0x00;
     /* Insert your solution below */
-	TimerSet(10);
+	TimerSet(11);
 	TimerOn();
 	SPI_init_master();
 	LCD_init();
