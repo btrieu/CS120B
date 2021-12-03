@@ -17,8 +17,8 @@ typedef struct task {
    int (*TickFct)(int);        // Task tick function
 } task;
 
-task tasks[3];
-const unsigned short tasksNum = 3;
+task tasks[4];
+const unsigned short tasksNum = 4;
 
 void TimerISR() {
 	unsigned char i;
@@ -143,6 +143,7 @@ unsigned char spawnDelay = 0;
 unsigned char maxSlimes = 2;
 unsigned char currSlimes = 0;
 unsigned char slimeArr[504][2];
+unsigned char slimeLoc[2];
 
 enum SlimeSpawnSM_States {SSSM_Start, SSSM_Run};
 int TickFct_SlimeSpawnSM(int state){
@@ -166,11 +167,13 @@ int TickFct_SlimeSpawnSM(int state){
 					for (unsigned short i = 0; i < 504; ++i) {
 						slimeArr[i][currSlimes-1] = lslime[i];
 					}
+					slimeLoc[currSlimes-1] = 1;
 				}
 				else if (spawnOrder[spawnIndex] == 2) {
 					for (unsigned short i = 0; i < 504; ++i) {
 						slimeArr[i][currSlimes-1] = rslime[i];
 					}
+					slimeLoc[currSlimes-1] = 2;
 				}
 				else if (spawnOrder[spawnIndex] == 3) {
 					unsigned short k = 63;
@@ -184,6 +187,7 @@ int TickFct_SlimeSpawnSM(int state){
 					for (unsigned char j = 0; j < 64; ++j) {
 						slimeArr[j][currSlimes-1] = 0x00;
 					}
+					slimeLoc[currSlimes-1] = 3;
 				}
 				else if (spawnOrder[spawnIndex] == 4) {
 					unsigned short k = 0;
@@ -194,8 +198,22 @@ int TickFct_SlimeSpawnSM(int state){
 					for (k = k; k < 504; ++k) {
 						slimeArr[k][currSlimes-1] = 0x00;
 					}
+					slimeLoc[currSlimes-1] = 4;
 				}
 				++spawnIndex;
+			}
+			for (unsigned char y = 0; y < currSlimes; ++y) {
+				if (slimeLoc[y] == 1 || slimeLoc[y] == 4) {
+					for (unsigned short x = 503; x > 0; --x) {
+						slimeArr[x][y] = slimeArr[x-1][y];
+					}
+				}
+				else if (slimeLoc[y] == 2 || slimeLoc[y] == 3) {
+					for (unsigned short x = 0; x < 504; ++x) {
+						slimeArr[x][y] = slimeArr[x+1][y];
+					}
+				}
+
 			}
 			for (unsigned short z = 0; z < 504; ++z) {
 				slimes[z] = slimeArr[z][0] | slimeArr[z][1];
@@ -205,6 +223,106 @@ int TickFct_SlimeSpawnSM(int state){
 	}
 	return state;
 }
+
+unsigned short attackDelay = 0;
+unsigned char attacks[504];
+unsigned char maxAttacks = 5;
+unsigned char currAttacks = 0;
+unsigned char attackArr[504][5];
+
+enum AttackSM_States {ASM_Start, ASM_Wait, ASM_Press, ASM_WaitRelease};
+int TickFct_AttackSM(int state){
+	switch(state) {
+		case ASM_Start:
+			state = ASM_Wait;
+			break;
+		case ASM_Wait:
+			if ((~PINA & 0x04) == 0x04) { state = ASM_Press; }
+			else { state = ASM_Wait; }
+			break;
+		case ASM_Press:
+			state = ASM_WaitRelease;
+			break;
+		case ASM_WaitRelease:
+			if ((~PINA & 0x04) == 0x04 && attackDelay > 10) { 
+				attackDelay = 0;
+				state = ASM_WaitRelease;
+		       	}
+			else { state = ASM_Wait; }
+			++attackDelay;
+			break;
+	}
+	switch(state) {
+		case ASM_Start:
+			break;
+		case ASM_Wait:
+			break;
+		case ASM_Press:
+			if (currAttacks < maxAttacks) {
+				++currAttacks;
+				if (currPos == 4) {
+					unsigned short k = 115;
+					for (unsigned short i = 115; i <= 122; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 115; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+				}
+				if (currPos == 3) {
+					unsigned short k = 131;
+					for (unsigned short i = 131; i <= 138; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 131; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+				}
+				if (currPos == 1) {
+					unsigned short k = 367;
+					for (unsigned short i = 367; i <= 374; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 367; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+				}
+				if (currPos == 2) {
+					unsigned short k = 383;
+					for (unsigned short i = 383; i <= 390; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 383; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+				}
+			}
+			for (unsigned short z = 0; z < 504; ++z) {
+				attacks[z] = attackArr[z][0] | attackArr[z][1] | attackArr[z][2] | attackArr[z][3] | attackArr[z][4];
+			}
+			break;
+		case ASM_WaitRelease:
+			break;
+	}
+	return state;
+}
+
 unsigned char ctr = 0;
 
 enum DisplaySM_States {DSM_Start, DSM_Run};
@@ -221,7 +339,7 @@ int TickFct_DisplaySM(int state){
 		case DSM_Start:
 			break;
 		case DSM_Run:
-			LCD_printBitmap(combineBitmap(charPos, slimes));
+			LCD_printBitmap(combineBitmap(combineBitmap(charPos, slimes),attacks));
 			break;
 	}
 	return state;
@@ -246,8 +364,13 @@ int main(void) {
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_SlimeSpawnSM;
 	++i;
+	tasks[i].state = ASM_Start;
+	tasks[i].period = 50;
+	tasks[i].elapsedTime = 0;
+	tasks[i].TickFct = &TickFct_AttackSM;
+	++i;	
 	tasks[i].state = DSM_Start;
-	tasks[i].period = 500;
+	tasks[i].period = 100;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_DisplaySM;
 	++i;
