@@ -144,6 +144,7 @@ unsigned char maxSlimes = 2;
 unsigned char currSlimes = 0;
 unsigned char slimeArr[504][2];
 unsigned char slimeLoc[2];
+unsigned char slimeMovesLeft[2];
 
 enum SlimeSpawnSM_States {SSSM_Start, SSSM_Run};
 int TickFct_SlimeSpawnSM(int state){
@@ -163,6 +164,7 @@ int TickFct_SlimeSpawnSM(int state){
 			if (spawnDelay > 5) { spawnDelay = 0; }
 			if (currSlimes < maxSlimes && spawnDelay == 5) {
 				++currSlimes;
+				slimeMovesLeft[currSlimes-1] = 26;
 				if (spawnOrder[spawnIndex] == 1) {
 					for (unsigned short i = 0; i < 504; ++i) {
 						slimeArr[i][currSlimes-1] = lslime[i];
@@ -213,7 +215,16 @@ int TickFct_SlimeSpawnSM(int state){
 						slimeArr[x][y] = slimeArr[x+1][y];
 					}
 				}
-
+				--slimeMovesLeft[y];
+			}
+			if (slimeMovesLeft[0] == 0 && currSlimes > 0) {
+				slimeMovesLeft[0] = slimeMovesLeft[1];
+				currSlimes--;
+				slimeLoc[0] = slimeLoc[1];
+				for (unsigned short w = 0; w < 504; ++w) {
+					slimeArr[w][0] = slimeArr[w][1];
+					slimeArr[w][1] = 0x00;
+				}
 			}
 			for (unsigned short z = 0; z < 504; ++z) {
 				slimes[z] = slimeArr[z][0] | slimeArr[z][1];
@@ -360,7 +371,7 @@ int main(void) {
 	tasks[i].TickFct = &TickFct_PlayerPositionSM;
 	++i;
 	tasks[i].state = SSSM_Start;
-	tasks[i].period = 1000;
+	tasks[i].period = 500;//1000;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_SlimeSpawnSM;
 	++i;
