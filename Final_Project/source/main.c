@@ -17,8 +17,8 @@ typedef struct task {
    int (*TickFct)(int);        // Task tick function
 } task;
 
-task tasks[4];
-const unsigned short tasksNum = 4;
+task tasks[6];
+const unsigned short tasksNum = 6;
 
 void TimerISR() {
 	unsigned char i;
@@ -34,6 +34,9 @@ void TimerISR() {
 unsigned char spawnOrder[10] = {4,2,3,1,3,4,1,2,1,3};
 
 unsigned char tempBitmap[504];
+unsigned char gameover = 0;
+unsigned char hit = 0;
+unsigned char score = 0;
 
 unsigned char* combineBitmap(unsigned char* a, unsigned char* b) {
 	for (unsigned short i = 0; i < 504; ++i) {
@@ -220,6 +223,7 @@ int TickFct_SlimeSpawnSM(int state){
 				--slimeMovesLeft[y];
 			}
 			if (slimeMovesLeft[0] == 0 && currSlimes > 0) {
+				--score;
 				slimeMovesLeft[0] = slimeMovesLeft[1];
 				currSlimes--;
 				slimeLoc[0] = slimeLoc[1];
@@ -252,7 +256,7 @@ int TickFct_AttackSM(int state){
 			state = ASM_Wait;
 			break;
 		case ASM_Wait:
-			if ((~PINA & 0x04) == 0x04) { state = ASM_Press; }
+			if ((~PINA & 0x04) == 0x04 && currAttacks < 5) { state = ASM_Press; }
 			else { state = ASM_Wait; }
 			break;
 		case ASM_Press:
@@ -366,9 +370,6 @@ int TickFct_AttackSM(int state){
 					arrowLoc[currAttacks-1] = 2;
 				}
 			}
-			/*for (unsigned short z = 0; z < 504; ++z) {
-				attacks[z] = attackArr[z][0] | attackArr[z][1] | attackArr[z][2] | attackArr[z][3] | attackArr[z][4];
-			}*/
 			break;
 		case ASM_WaitRelease:
 			break;
@@ -376,16 +377,116 @@ int TickFct_AttackSM(int state){
 	return state;
 }
 
-unsigned char ctr = 0;
+enum CollisionSM_States {CSM_Start, CSM_Run};
+int TickFct_CollisionSM(int state){
+	switch(state) {
+		case CSM_Start:
+			state = CSM_Run;
+			break;
+		case CSM_Run:
+			state = CSM_Run;
+			break;
+	}
+	switch(state) {
+		case CSM_Start:
+			break;
+		case CSM_Run:
+			hit = 0;
+			for (unsigned short i = 0; i < 2; ++i) {
+				for (unsigned short k = 0; k < 504; ++k) {
+					if ((slimeArr[k][i] & charPos[k]) != 0x00) { gameover = 1; }
+					if ((slimeArr[k][i] & attacks[k]) != 0x00) {
+						hit = 1;
+						if (i == 0) { 
+							slimeMovesLeft[0] = slimeMovesLeft[1];
+							currSlimes--;
+							slimeLoc[0] = slimeLoc[1];
+							for (unsigned short w = 0; w < 504; ++w) {
+								slimeArr[w][0] = slimeArr[w][1];
+								slimeArr[w][1] = 0x00;
+							}
+						}
+						else {
+							currSlimes--;
+							for (unsigned short w = 0; w < 504; ++w) {
+								slimeArr[w][1] = 0x00;
+							}
+						}
+					}
+				}
+			}
+			break;
+	}
+	return state;
+}
 
-enum DisplaySM_States {DSM_Start, DSM_Run};
+enum ScorekeeperSM_States {SKSM_Start, SKSM_Wait, SKSM_Hit, SKSM_Hit1};
+int TickFct_ScorekeeperSM(int state){
+	switch(state) {
+		case SKSM_Start:
+			state = SKSM_Wait;
+			score = 0;
+			break;
+		case SKSM_Wait:
+			if (hit == 0) { state = SKSM_Wait; }
+			else if (hit == 1) { state = SKSM_Hit; }
+			break;
+		case SKSM_Hit:
+			state = SKSM_Hit1;
+			break;
+		case SKSM_Hit1:
+			if (hit == 1) { state = SKSM_Hit1; }
+			else if (hit == 0) { state = SKSM_Wait; }
+			break;
+	}
+	switch(state) {
+		case SKSM_Start:
+			break;
+		case SKSM_Wait:
+			PORTD = score;
+			break;
+		case SKSM_Hit:
+			++score;
+			break;
+		case SKSM_Hit1:
+			break;
+	}
+	return state;
+}
+
+enum DisplaySM_States {DSM_Start, DSM_Run, DSM_Lose, DSM_Lose1};
 int TickFct_DisplaySM(int state){
 	switch(state) {
 		case DSM_Start:
 			state = DSM_Run;
 			break;
 		case DSM_Run:
-			state = DSM_Run;
+			if (gameover == 0) { state = DSM_Run; }
+			else if (gameover == 1) { state = DSM_Lose; }
+			break;
+		case DSM_Lose:
+			state = DSM_Lose1;
+			break;
+		case DSM_Lose1:
+			if ((~PINA & 0x04) == 0x04) {
+				gameover = 0;
+				for (unsigned short i = 0; i < 504; ++i) {
+					slimes[i] = 0;
+					slimeArr[i][0] = 0x00;
+					slimeArr[i][1] = 0x00;
+					attacks[i] = 0x00;
+					attackArr[i][0] = 0x00;
+					attackArr[i][1] = 0x00;
+					attackArr[i][2] = 0x00;
+					attackArr[i][3] = 0x00;
+					attackArr[i][4] = 0x00;
+				}
+				currSlimes = 0;
+				currAttacks = 0;
+				score = 0;
+				state = DSM_Run;
+			}
+			else { state = DSM_Lose1; }
 			break;
 	}
 	switch(state) {
@@ -393,6 +494,11 @@ int TickFct_DisplaySM(int state){
 			break;
 		case DSM_Run:
 			LCD_printBitmap(combineBitmap(combineBitmap(charPos, slimes),attacks));
+			break;
+		case DSM_Lose:
+			LCD_printBitmap(youLose);
+			break;
+		case DSM_Lose1:
 			break;
 	}
 	return state;
@@ -421,6 +527,16 @@ int main(void) {
 	tasks[i].period = 100;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_AttackSM;
+	++i;	
+	tasks[i].state = CSM_Start;
+	tasks[i].period = 50;
+	tasks[i].elapsedTime = 0;
+	tasks[i].TickFct = &TickFct_CollisionSM;
+	++i;	
+	tasks[i].state = SKSM_Start;
+	tasks[i].period = 5;
+	tasks[i].elapsedTime = 0;
+	tasks[i].TickFct = &TickFct_ScorekeeperSM;
 	++i;	
 	tasks[i].state = DSM_Start;
 	tasks[i].period = 100;
