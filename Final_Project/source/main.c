@@ -37,6 +37,7 @@ unsigned char tempBitmap[504];
 unsigned char gameover = 0;
 unsigned char hit = 0;
 unsigned char score = 0;
+unsigned char multiplayer;
 
 unsigned char* combineBitmap(unsigned char* a, unsigned char* b) {
 	for (unsigned short i = 0; i < 504; ++i) {
@@ -47,7 +48,10 @@ unsigned char* combineBitmap(unsigned char* a, unsigned char* b) {
 unsigned char charPos[504];
 unsigned char currPos = 0;
 
-enum PlayerPositionSM_States {PPSM_Start, PPSM_Wait, PPSM_DL, PPSM_DR, PPSM_UL, PPSM_UR};
+unsigned char js1;
+unsigned char js2;
+
+enum PlayerPositionSM_States {PPSM_Start, PPSM_Wait, PPSM_DL, PPSM_DR, PPSM_UL, PPSM_UR, PPSM_2p1, PPSM_2p2, PPSM_2p3, PPSM_2p4};
 int TickFct_PlayerPositionSM(int state){
 	unsigned short i;
 	switch(state) {
@@ -56,33 +60,67 @@ int TickFct_PlayerPositionSM(int state){
 			state = PPSM_Wait;
 			break;
 		case PPSM_Wait:
-			if (currPos == 1) {
-				if ((Joystick_poll() & 0x0F) == 0x01) { state = PPSM_UL; }
-				else if ((Joystick_poll() & 0x0F) == 0x02) { state = PPSM_UR; }
-				else if ((Joystick_poll() & 0x0F) == 0x03) { state = PPSM_DR; }
-				else if ((Joystick_poll() & 0x0F) == 0x04) { state = PPSM_DR; }
-				else if ((Joystick_poll() & 0x0F) == 0x08) { state = PPSM_UL; }
+			js1 = Joystick_poll() & 0x0F;
+			js2 = Joystick2_poll() & 0x0F;
+			if (currPos == 1 && multiplayer == 0x00) {
+				if (js1 == 0x01) { state = PPSM_UL; }
+				else if (js1 == 0x02) { state = PPSM_UR; }
+				else if (js1 == 0x03) { state = PPSM_DR; }
+				else if (js1 == 0x04) { state = PPSM_DR; }
+				else if (js1 == 0x08) { state = PPSM_UL; }
 			}
-			else if (currPos == 2) {
-				if ((Joystick_poll() & 0x0F) == 0x01) { state = PPSM_UR; }
-				else if ((Joystick_poll() & 0x0F) == 0x02) { state = PPSM_UR; }
-				else if ((Joystick_poll() & 0x0F) == 0x06) { state = PPSM_DL; }
-				else if ((Joystick_poll() & 0x0F) == 0x07) { state = PPSM_DL; }
-				else if ((Joystick_poll() & 0x0F) == 0x08) { state = PPSM_UR; }
+			else if (currPos == 2 && multiplayer == 0x00) {
+				if (js1 == 0x01) { state = PPSM_UR; }
+				else if (js1 == 0x02) { state = PPSM_UR; }
+				else if (js1 == 0x06) { state = PPSM_DL; }
+				else if (js1 == 0x07) { state = PPSM_DL; }
+				else if (js1 == 0x08) { state = PPSM_UR; }
 			}
-			else if (currPos == 3) {
-				if ((Joystick_poll() & 0x0F) == 0x04) { state = PPSM_DR; }
-				else if ((Joystick_poll() & 0x0F) == 0x05) { state = PPSM_DR; }
-				else if ((Joystick_poll() & 0x0F) == 0x06) { state = PPSM_DL; }
-				else if ((Joystick_poll() & 0x0F) == 0x07) { state = PPSM_UL; }
-				else if ((Joystick_poll() & 0x0F) == 0x08) { state = PPSM_UL; }
+			else if (currPos == 3 && multiplayer == 0x00) {
+				if (js1 == 0x04) { state = PPSM_DR; }
+				else if (js1 == 0x05) { state = PPSM_DR; }
+				else if (js1 == 0x06) { state = PPSM_DL; }
+				else if (js1 == 0x07) { state = PPSM_UL; }
+				else if (js1 == 0x08) { state = PPSM_UL; }
 			}
-			else if (currPos == 4) {
-				if ((Joystick_poll() & 0x0F) == 0x02) { state = PPSM_UR; }
-				else if ((Joystick_poll() & 0x0F) == 0x03) { state = PPSM_UR; }
-				else if ((Joystick_poll() & 0x0F) == 0x04) { state = PPSM_DR; }
-				else if ((Joystick_poll() & 0x0F) == 0x05) { state = PPSM_DL; }
-				else if ((Joystick_poll() & 0x0F) == 0x06) { state = PPSM_DL; }
+			else if (currPos == 4 && multiplayer == 0x00) {
+				if (js1 == 0x02) { state = PPSM_UR; }
+				else if (js1 == 0x03) { state = PPSM_UR; }
+				else if (js1 == 0x04) { state = PPSM_DR; }
+				else if (js1 == 0x05) { state = PPSM_DL; }
+				else if (js1 == 0x06) { state = PPSM_DL; }
+			}
+			else if (currPos == 1 && multiplayer == 0x01) {
+				if ((js2 > 0x01 && js2 < 0x05)
+				&& !(js1 > 0x01 && js1 < 0x05)) { state = PPSM_2p4; }
+				else if ((js1 > 0x01 && js1 < 0x05)
+				&& !(js2 > 0x01 && js2 < 0x05)) { state = PPSM_2p3; }
+				else if ((js1 > 0x01 && js1 < 0x05)
+				&& (js2 > 0x01 && js2 < 0x05)) { state = PPSM_2p2; }
+			}
+			else if (currPos == 2 && multiplayer == 0x01) {
+				if ((js2 > 0x05 && js2 < 0x09)
+				&& !(js1 > 0x05 && js1 < 0x09)) { state = PPSM_2p3; }
+				else if ((js1 > 0x05 && js1 < 0x09)
+				&& !(js2 > 0x05 && js2 < 0x09)) { state = PPSM_2p4; }
+				else if ((js1 > 0x05 && js1 < 0x09)
+				&& (js2 > 0x05 && js2 < 0x09)) { state = PPSM_2p1; }
+			}
+			else if (currPos == 3 && multiplayer == 0x01) {
+				if ((js2 > 0x01 && js2 < 0x05)
+				&& !(js1 > 0x01 && js1 < 0x05)) { state = PPSM_2p2; }
+				else if ((js1 > 0x05 && js1 < 0x09)
+				&& !(js2 > 0x05 && js2 < 0x09)) { state = PPSM_2p1; }
+				else if ((js1 > 0x05 && js1 < 0x09)
+				&& (js2 > 0x01 && js2 < 0x05)) { state = PPSM_2p4; }
+			}
+			else if (currPos == 4 && multiplayer == 0x01) {
+				if ((js2 > 0x05 && js2 < 0x09)
+				&& !(js1 > 0x05 && js1 < 0x09)) { state = PPSM_2p1; }
+				else if ((js1 > 0x01 && js1 < 0x05)
+				&& !(js2 > 0x01 && js2 < 0x05)) { state = PPSM_2p2; }
+				else if ((js1 > 0x01 && js1 < 0x05)
+				&& (js2 > 0x05 && js2 < 0x09)) { state = PPSM_2p3; }
 			}
 			else { PORTC = 0x01; }
 			break;
@@ -98,29 +136,61 @@ int TickFct_PlayerPositionSM(int state){
 		case PPSM_UR:
 			state = PPSM_Wait;
 			break;
+		case PPSM_2p1:
+			state = PPSM_Wait;
+			break;
+		case PPSM_2p2:
+			state = PPSM_Wait;
+			break;
+		case PPSM_2p3:
+			state = PPSM_Wait;
+			break;
+		case PPSM_2p4:
+			state = PPSM_Wait;
+			break;
 	}
 	switch(state) {
 		case PPSM_Start:
 			break;
 		case PPSM_Wait:
-			if (currPos == 1) {
+			if (currPos == 1 && multiplayer == 0x00) {
 				for (i = 0; i < 504; ++i) {
 					charPos[i] = downleft_1p[i];
 				}
 			}
-			else if (currPos == 2) {
+			else if (currPos == 2 && multiplayer == 0x00) {
 				for (i = 0; i < 504; ++i) {
 					charPos[i] = downright_1p[i];
 				}
 			}
-			else if (currPos == 3) {
+			else if (currPos == 3 && multiplayer == 0x00) {
 				for (i = 0; i < 504; ++i) {
 					charPos[i] = upright_1p[i];
 				}
 			}
-			else if (currPos == 4) {
+			else if (currPos == 4 && multiplayer == 0x00) {
 				for (i = 0; i < 504; ++i) {
 					charPos[i] = upleft_1p[i];
+				}
+			}
+			else if (currPos == 1 && multiplayer == 0x01) {
+				for (i = 0; i < 504; ++i) {
+					charPos[i] = downleft_1p[i] | upleft_1p[i] | twoplayer[i];
+				}
+			}
+			else if (currPos == 2 && multiplayer == 0x01) {
+				for (i = 0; i < 504; ++i) {
+					charPos[i] = downright_1p[i] | upright_1p[i] | twoplayer[i];
+				}
+			}
+			else if (currPos == 3 && multiplayer == 0x01) {
+				for (i = 0; i < 504; ++i) {
+					charPos[i] = upright_1p[i] | downleft_1p[i] | twoplayer[i];
+				}
+			}
+			else if (currPos == 4 && multiplayer == 0x01) {
+				for (i = 0; i < 504; ++i) {
+					charPos[i] = upleft_1p[i] | downright_1p[i] | twoplayer[i];
 				}
 			}
 			break;
@@ -135,6 +205,18 @@ int TickFct_PlayerPositionSM(int state){
 			break;
 		case PPSM_UR:
 			currPos = 3;
+			break;
+		case PPSM_2p1:
+			currPos = 1;
+			break;
+		case PPSM_2p2:
+			currPos = 2;
+			break;
+		case PPSM_2p3:
+			currPos = 3;
+			break;
+		case PPSM_2p4:
+			currPos = 4;
 			break;
 	}
 	return state;
@@ -223,7 +305,9 @@ int TickFct_SlimeSpawnSM(int state){
 				--slimeMovesLeft[y];
 			}
 			if (slimeMovesLeft[0] == 0 && currSlimes > 0) {
-				--score;
+				if (gameover == 0 && score > 0) {
+					--score;
+				}
 				slimeMovesLeft[0] = slimeMovesLeft[1];
 				currSlimes--;
 				slimeLoc[0] = slimeLoc[1];
@@ -249,21 +333,28 @@ unsigned char attackArr[504][5];
 unsigned char arrowLoc[5];
 unsigned char arrowMovesLeft[5];
 
-enum AttackSM_States {ASM_Start, ASM_Wait, ASM_Press, ASM_WaitRelease};
+unsigned char jsPressed;
+
+enum AttackSM_States {ASM_Start, ASM_Wait, ASM_Press, ASM_Press1, ASM_WaitRelease};
 int TickFct_AttackSM(int state){
 	switch(state) {
 		case ASM_Start:
 			state = ASM_Wait;
 			break;
 		case ASM_Wait:
-			if ((~PINA & 0x04) == 0x04 && currAttacks < 5) { state = ASM_Press; }
+			if ((~PINA & 0x04) == 0x04 && currAttacks < 5 && multiplayer == 0) { state = ASM_Press; }
+			else if ((~PINA & 0x20) == 0x20 && currAttacks < 5 && multiplayer == 1) { jsPressed = 2; state = ASM_Press1; }
+			else if ((~PINA & 0x04) == 0x04 && currAttacks < 5 && multiplayer == 1) { jsPressed = 1; state = ASM_Press1; }
 			else { state = ASM_Wait; }
 			break;
 		case ASM_Press:
 			state = ASM_WaitRelease;
 			break;
+		case ASM_Press1:
+			state = ASM_WaitRelease;
+			break;
 		case ASM_WaitRelease:
-			if ((~PINA & 0x04) == 0x04 && attackDelay > 10) { 
+			if (((~PINA & 0x04) == 0x04 || (~PINA & 0x20) == 0x20) && attackDelay > 10) { 
 				attackDelay = 0;
 				state = ASM_WaitRelease;
 		       	}
@@ -371,6 +462,73 @@ int TickFct_AttackSM(int state){
 				}
 			}
 			break;
+		case ASM_Press1:
+			if (currAttacks < maxAttacks) {
+				++currAttacks;
+				arrowMovesLeft[currAttacks-1] = 31;
+				if ((currPos == 4 || currPos == 1) && jsPressed == 1) { //top left
+					jsPressed = 0;
+					unsigned short k = 115;
+					for (unsigned short i = 115; i <= 122; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 115; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+					arrowLoc[currAttacks-1] = 4;
+				}
+				if ((currPos == 3 || currPos == 2) && jsPressed == 1) {//top right
+					jsPressed = 0;
+					unsigned short k = 131;
+					for (unsigned short i = 131; i <= 138; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 131; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+					arrowLoc[currAttacks-1] = 3;
+				}
+				if ((currPos == 1 || currPos == 3) && jsPressed == 2) {//bottom left
+					jsPressed = 0;
+					unsigned short k = 367;
+					for (unsigned short i = 367; i <= 374; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 367; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+					arrowLoc[currAttacks-1] = 1;
+				}
+				if ((currPos == 2 || currPos == 4) && jsPressed == 2) {//bottom right
+					PORTC = 0xFF;
+					jsPressed = 0;
+					unsigned short k = 383;
+					for (unsigned short i = 383; i <= 390; ++i) {
+						attackArr[k][currAttacks-1] = attack[i];
+						++k;
+					}
+					for (k = k; k < 504; ++k) {
+						attackArr[k][currAttacks-1] = 0x00;
+					}
+					for (unsigned short j = 0; j < 383; ++j) {
+						attackArr[j][currAttacks-1] = 0x00;
+					}
+					arrowLoc[currAttacks-1] = 2;
+				}
+			}
+			break;
 		case ASM_WaitRelease:
 			break;
 	}
@@ -394,7 +552,7 @@ int TickFct_CollisionSM(int state){
 			hit = 0;
 			for (unsigned short i = 0; i < 2; ++i) {
 				for (unsigned short k = 0; k < 504; ++k) {
-					if ((slimeArr[k][i] & charPos[k]) != 0x00) { gameover = 1; }
+					if ((slimeArr[k][i] & charPos[k]) != 0x00) { /*gameover = 1;*/ }
 					if ((slimeArr[k][i] & attacks[k]) != 0x00) {
 						hit = 1;
 						if (i == 0) { 
@@ -446,7 +604,9 @@ int TickFct_ScorekeeperSM(int state){
 			PORTD = score;
 			break;
 		case SKSM_Hit:
-			++score;
+			if (gameover == 0) {
+				++score;
+			}
 			break;
 		case SKSM_Hit1:
 			break;
@@ -504,7 +664,6 @@ int TickFct_DisplaySM(int state){
 	return state;
 }
 
-
 int main(void) {
     	
 	DDRA = 0x00; PORTA = 0xFF;
@@ -548,6 +707,7 @@ int main(void) {
 	SPI_init_master();
 	LCD_init();
 	Joystick_init();
+	multiplayer = (PINA & 0x40) >> 6;
     	while (1) { }
     	return 1;
 }
