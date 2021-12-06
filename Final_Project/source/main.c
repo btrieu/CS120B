@@ -467,7 +467,6 @@ int TickFct_AttackSM(int state){
 				++currAttacks;
 				arrowMovesLeft[currAttacks-1] = 31;
 				if ((currPos == 4 || currPos == 1) && jsPressed == 1) { //top left
-					jsPressed = 0;
 					unsigned short k = 115;
 					for (unsigned short i = 115; i <= 122; ++i) {
 						attackArr[k][currAttacks-1] = attack[i];
@@ -482,7 +481,6 @@ int TickFct_AttackSM(int state){
 					arrowLoc[currAttacks-1] = 4;
 				}
 				if ((currPos == 3 || currPos == 2) && jsPressed == 1) {//top right
-					jsPressed = 0;
 					unsigned short k = 131;
 					for (unsigned short i = 131; i <= 138; ++i) {
 						attackArr[k][currAttacks-1] = attack[i];
@@ -497,7 +495,6 @@ int TickFct_AttackSM(int state){
 					arrowLoc[currAttacks-1] = 3;
 				}
 				if ((currPos == 1 || currPos == 3) && jsPressed == 2) {//bottom left
-					jsPressed = 0;
 					unsigned short k = 367;
 					for (unsigned short i = 367; i <= 374; ++i) {
 						attackArr[k][currAttacks-1] = attack[i];
@@ -512,8 +509,6 @@ int TickFct_AttackSM(int state){
 					arrowLoc[currAttacks-1] = 1;
 				}
 				if ((currPos == 2 || currPos == 4) && jsPressed == 2) {//bottom right
-					PORTC = 0xFF;
-					jsPressed = 0;
 					unsigned short k = 383;
 					for (unsigned short i = 383; i <= 390; ++i) {
 						attackArr[k][currAttacks-1] = attack[i];
@@ -552,7 +547,7 @@ int TickFct_CollisionSM(int state){
 			hit = 0;
 			for (unsigned short i = 0; i < 2; ++i) {
 				for (unsigned short k = 0; k < 504; ++k) {
-					if ((slimeArr[k][i] & charPos[k]) != 0x00) { /*gameover = 1;*/ }
+					if ((slimeArr[k][i] & charPos[k]) != 0x00) { gameover = 1; }
 					if ((slimeArr[k][i] & attacks[k]) != 0x00) {
 						hit = 1;
 						if (i == 0) { 
@@ -628,7 +623,7 @@ int TickFct_DisplaySM(int state){
 			state = DSM_Lose1;
 			break;
 		case DSM_Lose1:
-			if ((~PINA & 0x04) == 0x04) {
+			if ((~PINA & 0x04) == 0x04 || (~PINA & 0x20) == 0x20) {
 				gameover = 0;
 				for (unsigned short i = 0; i < 504; ++i) {
 					slimes[i] = 0;
@@ -643,7 +638,9 @@ int TickFct_DisplaySM(int state){
 				}
 				currSlimes = 0;
 				currAttacks = 0;
+				multiplayer = (PINA & 0x40) >> 6;
 				score = 0;
+
 				state = DSM_Run;
 			}
 			else { state = DSM_Lose1; }
@@ -678,7 +675,7 @@ int main(void) {
 	tasks[i].TickFct = &TickFct_PlayerPositionSM;
 	++i;
 	tasks[i].state = SSSM_Start;
-	tasks[i].period = 500;//1000;
+	tasks[i].period = 250;
 	tasks[i].elapsedTime = 0;
 	tasks[i].TickFct = &TickFct_SlimeSpawnSM;
 	++i;
